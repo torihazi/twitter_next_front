@@ -1,12 +1,18 @@
 import { ReactNode } from "react";
 
-// NextuiのDividerにはChildrenが使えないため自作
-export const Divider = ({ children }: { children?: ReactNode }) => {
+// NextuiのDividerにはテキストを挟み込めないので自作
+export const Divider = ({
+  children,
+  className,
+}: {
+  children?: ReactNode;
+  className?: string;
+}) => {
   return (
-    <div className="flex items-center justify-center w-[300px] my-2">
-      <div className="flex-1 border-b "></div>
+    <div className={`flex items-center justify-center my-2 ${className}`}>
+      <div className="flex-1 border-b" />
       {children}
-      <div className="flex-1 border-b "></div>
+      <div className="flex-1 border-b" />
     </div>
   );
 };
