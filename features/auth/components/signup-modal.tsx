@@ -25,7 +25,6 @@ export const SignupModal = ({
         {(onClose) => (
           <>
             <ModalHeader className="flex flex-col">
-              <X />
               <h3 className="font-bold text-3xl md:text-4xl mb-[32px]">
                 アカウントを作成
               </h3>
