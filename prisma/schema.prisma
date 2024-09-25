@@ -1,0 +1,62 @@
+generator zod {
+  provider                         = "zod-prisma-types"
+　　　　output                           = "./generated/zod" // 出力ディレクトリの指定
+  useMultipleFiles                 = true // スキーマを複数ファイルに分割
+  writeBarrelFiles                 = false // バレルファイルの生成を無効化
+  createInputTypes                 = false // 入力タイプの生成を無効化
+  createModelTypes                 = true // モデルタイプの生成を有効化
+  addInputTypeValidation           = true // 入力タイプに対するバリデーションの追加
+  createOptionalDefaultValuesTypes = true // デフォルト値を持つフィールドをオプショナルに
+  createRelationValuesTypes        = true // リレーションフィールドを含むタイプの生成
+  createPartialTypes               = true // 全フィールドをオプショナルにしたパーシャルタイプの生成
+  useDefaultValidators             = false // Zodのデフォルトバリデータの使用を無効化
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ar_internal_metadata {
+  key        String   @id @db.VarChar
+  value      String?  @db.VarChar
+  created_at DateTime @db.Timestamp(6)
+  updated_at DateTime @db.Timestamp(6)
+}
+
+model schema_migrations {
+  version String @id @db.VarChar
+}
+
+model tasks {
+  id          BigInt   @id @default(autoincrement())
+  title       String   @db.VarChar
+  description String
+  status      Int
+  created_at  DateTime @db.Timestamp(6)
+  updated_at  DateTime @db.Timestamp(6)
+}
+
+model users {
+  id                     BigInt    @id @default(autoincrement())
+  email                  String    @unique(map: "index_users_on_email") @default("") @db.VarChar
+  encrypted_password     String    @default("") @db.VarChar
+  profile                String?   @db.VarChar
+  place                  String?   @db.VarChar
+  web                    String?   @db.VarChar
+  birth                  String?   @db.VarChar
+  reset_password_token   String?   @unique(map: "index_users_on_reset_password_token") @db.VarChar
+  reset_password_sent_at DateTime? @db.Timestamp(6)
+  remember_created_at    DateTime? @db.Timestamp(6)
+  confirmation_token     String?   @unique(map: "index_users_on_confirmation_token") @db.VarChar
+  confirmed_at           DateTime? @db.Timestamp(6)
+  confirmation_sent_at   DateTime? @db.Timestamp(6)
+  unconfirmed_email      String?   @db.VarChar
+  created_at             DateTime  @db.Timestamp(6)
+  updated_at             DateTime  @db.Timestamp(6)
+  jti                    String    @unique(map: "index_users_on_jti") @db.VarChar
+}
