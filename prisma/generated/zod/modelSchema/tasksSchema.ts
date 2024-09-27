@@ -8,7 +8,7 @@ export const tasksSchema = z.object({
   id: z.bigint(),
   title: z.string(),
   description: z.string(),
-  status: z.number(),
+  status: z.number().int(),
   created_at: z.coerce.date(),
   updated_at: z.coerce.date(),
 })

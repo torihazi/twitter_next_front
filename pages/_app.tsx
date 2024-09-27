@@ -4,6 +4,9 @@ import { NextUIProvider } from "@nextui-org/system";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { useRouter } from "next/router";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import { fontSans, fontMono } from "@/config/fonts";
 import "@/styles/globals.css";
 
@@ -12,7 +15,8 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <NextUIProvider navigate={router.push}>
-      <NextThemesProvider>
+      <NextThemesProvider attribute="class" defaultTheme="dark">
+        <ToastContainer />
         <Component {...pageProps} />
       </NextThemesProvider>
     </NextUIProvider>

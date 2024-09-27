@@ -13,7 +13,7 @@ export const AuthTemplate = ({ children }: { children: ReactNode }) => {
       <footer className="w-full flex justify-center flex-wrap gap-2 py-3">
         {footerLinks.map((footerLink) => (
           <Link
-            key={footerLink.href}
+            key={footerLink.label}
             isExternal
             className="flex items-center gap-1 text-current text-xs md:text-sm whitespace-nowrap"
             href={footerLink.href}

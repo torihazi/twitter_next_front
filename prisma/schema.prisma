@@ -1,15 +1,14 @@
 generator zod {
   provider                         = "zod-prisma-types"
-　　　　output                           = "./generated/zod" // 出力ディレクトリの指定
-  useMultipleFiles                 = true // スキーマを複数ファイルに分割
-  writeBarrelFiles                 = false // バレルファイルの生成を無効化
-  createInputTypes                 = false // 入力タイプの生成を無効化
-  createModelTypes                 = true // モデルタイプの生成を有効化
-  addInputTypeValidation           = true // 入力タイプに対するバリデーションの追加
-  createOptionalDefaultValuesTypes = true // デフォルト値を持つフィールドをオプショナルに
-  createRelationValuesTypes        = true // リレーションフィールドを含むタイプの生成
-  createPartialTypes               = true // 全フィールドをオプショナルにしたパーシャルタイプの生成
-  useDefaultValidators             = false // Zodのデフォルトバリデータの使用を無効化
+  output                           = "./generated/zod"
+  writeBarrelFiles                 = "false"
+  createOptionalDefaultValuesTypes = "true"
+  createModelTypes                 = "true"
+  useMultipleFiles                 = "true"
+  createRelationValuesTypes        = "true"
+  createPartialTypes               = "true"
+  createInputTypes                 = "false"
+  addInputTypeValidation           = "true"
 }
 
 generator client {
@@ -42,9 +41,12 @@ model tasks {
 }
 
 model users {
-  id                     BigInt    @id @default(autoincrement())
+  id                     String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  /// @zod.string.min(1,{message: "Required"}).email()
   email                  String    @unique(map: "index_users_on_email") @default("") @db.VarChar
   encrypted_password     String    @default("") @db.VarChar
+  /// @zod.string.min(1,{message: "Required"})
+  name                   String    @default("") @db.VarChar(50)
   profile                String?   @db.VarChar
   place                  String?   @db.VarChar
   web                    String?   @db.VarChar
