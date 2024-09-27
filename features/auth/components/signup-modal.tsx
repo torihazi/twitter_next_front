@@ -29,7 +29,7 @@ type SignupModalTypes = {
 
 const usersSignupSchema = usersPartialSchema.merge(
   z.object({
-    password: z.string().min(1, "Required").optional(),
+    password: z.string().min(6, "at least 6 characters").optional(),
   })
 );
 
