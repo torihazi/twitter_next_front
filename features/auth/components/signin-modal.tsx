@@ -56,7 +56,6 @@ export const SigninModal = ({
   });
 
   const onSubmit: SubmitHandler<usersSignin> = (data) => {
-    // console.log(data);
     signin(data);
   };
 
