@@ -26,14 +26,14 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 api.interceptors.response.use(
   // HTTPコードが2xxの時
   (response: AxiosResponse) => {
-    console.log(response);
     toast.info(response.data.message);
+    console.log(response);
     return response;
   },
   // HTTPコードが2xx以外の時
   (error: AxiosError) => {
+    toast.error(error.response?.data?.error);
     console.log(error);
-    toast.error(error.response?.data?.message);
-    return error;
+    throw error;
   }
 );

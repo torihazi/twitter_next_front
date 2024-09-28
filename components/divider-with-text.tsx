@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
 // NextuiのDividerにはテキストを挟み込めないので自作
-export const Divider = ({
+export const DividerWithText = ({
   children,
   className,
 }: {
