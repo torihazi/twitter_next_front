@@ -16,7 +16,10 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   config.headers.set("Accept", "application/json");
 
   // Authorizationの項目に値が入っていなかった場合、設定
-  if (!config.headers.has("Authorization")) {
+  if (
+    !config.headers.has("Authorization") &&
+    config.url !== "/api/v1/users/sign_in"
+  ) {
     config.headers.set("Authorization", Cookies.get("token"));
   }
   return config;

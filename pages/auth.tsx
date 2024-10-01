@@ -30,13 +30,6 @@ const AuthPage = () => {
     triggerToast();
   }, [router.query]);
 
-  // 他ユーザのログインを可能にするための措置
-  useEffect(() => {
-    if (Cookies.get("token")) {
-      Cookies.remove("token");
-    }
-  }, []);
-
   return (
     <AuthTemplate>
       <div className="flex flex-col md:flex-row md:justify-between">
