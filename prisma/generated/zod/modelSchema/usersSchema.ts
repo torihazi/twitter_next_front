@@ -5,7 +5,7 @@ import { z } from "zod";
 /////////////////////////////////////////
 
 export const usersSchema = z.object({
-  id: z.string(),
+  id: z.bigint(),
   email: z.string().min(1, { message: "Required" }).email(),
   encrypted_password: z.string(),
   name: z.string().min(1, { message: "Required" }),
@@ -41,10 +41,11 @@ export type usersPartial = z.infer<typeof usersPartialSchema>;
 
 export const usersOptionalDefaultsSchema = usersSchema.merge(
   z.object({
-    id: z.string().optional(),
+    id: z.bigint().optional(),
     email: z.string().min(1, { message: "Required" }).email().optional(),
     encrypted_password: z.string().optional(),
     name: z.string().min(1, { message: "Required" }).optional(),
+    jti: z.string().optional(),
   })
 );
 
