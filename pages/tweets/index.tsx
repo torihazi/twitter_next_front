@@ -13,6 +13,13 @@ const index = () => {
       >
         authenticate_userとcurrent_api_v1_userのチェック
       </Button>
+      <Button
+        onClick={async () => {
+          await api.delete("api/v1/users/sign_out");
+        }}
+      >
+        ログアウト
+      </Button>
     </div>
   );
 };

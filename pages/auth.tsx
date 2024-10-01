@@ -6,6 +6,7 @@ import { SignupModal } from "@/features/auth/components/signup-modal";
 import { useToastViaConfirmation } from "@/features/auth/hook/useToastViaConfirmation";
 import { AuthTemplate } from "@/layouts/auth-template";
 import { useDisclosure } from "@nextui-org/modal";
+import Cookies from "js-cookie";
 import { Apple, Atom } from "lucide-react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -28,6 +29,13 @@ const AuthPage = () => {
   useEffect(() => {
     triggerToast();
   }, [router.query]);
+
+  // 他ユーザのログインを可能にするための措置
+  useEffect(() => {
+    if (Cookies.get("token")) {
+      Cookies.remove("token");
+    }
+  }, []);
 
   return (
     <AuthTemplate>
