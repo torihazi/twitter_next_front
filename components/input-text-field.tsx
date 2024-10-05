@@ -10,8 +10,8 @@ export const InputTextField = ({
 }) => {
   return (
     <Input
-      {...form.register(`${name}`)}
-      label={`${name}`}
+      {...form.register(name)}
+      label={name}
       variant="bordered"
       autoComplete="off"
       isInvalid={!!form.formState.errors[name]}

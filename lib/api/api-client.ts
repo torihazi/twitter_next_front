@@ -16,7 +16,10 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   config.headers.set("Accept", "application/json");
 
   // Authorizationの項目に値が入っていなかった場合、設定
-  if (!config.headers.has("Authorization")) {
+  if (
+    !config.headers.has("Authorization") &&
+    config.url !== "/api/v1/users/sign_in"
+  ) {
     config.headers.set("Authorization", Cookies.get("token"));
   }
   return config;
@@ -26,14 +29,14 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 api.interceptors.response.use(
   // HTTPコードが2xxの時
   (response: AxiosResponse) => {
-    console.log(response);
     toast.info(response.data.message);
+    console.log(response);
     return response;
   },
   // HTTPコードが2xx以外の時
   (error: AxiosError) => {
+    toast.error(error.response?.data?.error);
     console.log(error);
-    toast.error(error.response?.data?.message);
-    return error;
+    throw error;
   }
 );

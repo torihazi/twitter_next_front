@@ -1,10 +1,12 @@
 import { AuthButton } from "@/components/auth-button";
-import { Divider } from "@/components/divider";
+import { DividerWithText } from "@/components/divider-with-text";
 import { LogoImage } from "@/components/logo-image";
+import { SigninModal } from "@/features/auth/components/signin-modal";
 import { SignupModal } from "@/features/auth/components/signup-modal";
 import { useToastViaConfirmation } from "@/features/auth/hook/useToastViaConfirmation";
 import { AuthTemplate } from "@/layouts/auth-template";
 import { useDisclosure } from "@nextui-org/modal";
+import Cookies from "js-cookie";
 import { Apple, Atom } from "lucide-react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -16,6 +18,11 @@ const AuthPage = () => {
     isOpen: isSignupOpen,
     onOpen: onSignupOpen,
     onOpenChange: onSignupOpenChange,
+  } = useDisclosure();
+  const {
+    isOpen: isSigninOpen,
+    onOpen: onSigninOpen,
+    onOpenChange: onSigninOpenChange,
   } = useDisclosure();
 
   // 認証メール経由した場合発火
@@ -50,7 +57,7 @@ const AuthPage = () => {
             >
               Appleのアカウントで登録
             </AuthButton>
-            <Divider className="w-[300px]">または</Divider>
+            <DividerWithText className="w-[300px]">または</DividerWithText>
             <AuthButton
               className="bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg"
               onClick={() => onSignupOpen()}
@@ -66,7 +73,10 @@ const AuthPage = () => {
               <h4 className="font-bold text-2xl mb-2">
                 アカウントをお持ちの場合
               </h4>
-              <AuthButton className="bg-gradient-to-tr from-sky-400 to-lime-300 text-white">
+              <AuthButton
+                className="bg-gradient-to-tr from-sky-400 to-lime-300 text-white"
+                onClick={() => onSigninOpen()}
+              >
                 ログイン
               </AuthButton>
             </div>
@@ -77,6 +87,11 @@ const AuthPage = () => {
         isOpen={isSignupOpen}
         onOpen={onSignupOpen}
         onOpenChange={onSignupOpenChange}
+      />
+      <SigninModal
+        isOpen={isSigninOpen}
+        onOpen={onSigninOpen}
+        onOpenChange={onSigninOpenChange}
       />
     </AuthTemplate>
   );

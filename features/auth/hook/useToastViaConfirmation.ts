@@ -8,9 +8,9 @@ export const useToastViaConfirmation = () => {
     const result = router.query?.confirmation;
 
     if (result === "success") {
-      toast.info("認証に成功しました");
+      toast.info("Verificaition success");
     } else if (result === "failure") {
-      toast.info("認証に失敗しました");
+      toast.info("Verificaition failure");
     }
   };
 
