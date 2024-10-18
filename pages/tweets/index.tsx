@@ -10,9 +10,35 @@ import Image from "next/image";
 import { useState } from "react";
 import { inputIconItems } from "@/features/home/consts/input-icons";
 import { TweetForm } from "@/features/home/components/tweet-form";
+import { useForm } from "react-hook-form";
+import tweetsSchema, {
+  tweetsPartial,
+  tweetsPartialSchema,
+} from "@/prisma/generated/zod/modelSchema/tweetsSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+const tweetsWithImagesSchema = tweetsSchema.merge(
+  z.object({
+    images: z.custom<FileList>(),
+  })
+);
+
+const tweetsPartialWithImagesSchema = tweetsWithImagesSchema.partial();
+
+export type tweetsPartialWithImages = z.infer<
+  typeof tweetsPartialWithImagesSchema
+>;
 
 const TweetsIndex = () => {
   const [selected, setSelected] = useState<string>("for-you");
+  const form = useForm<tweetsPartialWithImages>({
+    resolver: zodResolver(tweetsPartialWithImagesSchema),
+    mode: "onChange",
+    defaultValues: {
+      content: "",
+    },
+  });
 
   return (
     <HomeTemplate>
@@ -30,10 +56,10 @@ const TweetsIndex = () => {
             onSelectionChange={setSelected}
           >
             <Tab key="for-you" title="For you">
-              <TweetForm />
+              <TweetForm form={form} />
             </Tab>
             <Tab key="followings" title="Followings">
-              <TweetForm />
+              <TweetForm form={form} />
             </Tab>
           </Tabs>
         </div>

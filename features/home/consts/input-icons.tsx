@@ -8,10 +8,10 @@ export type inputIconItemType = {
 };
 
 export const inputIconItems: inputIconItemType[] = [
-  {
-    icon: <Image size={18} />,
-    tooltip: "Image",
-  },
+  // {
+  //   icon: <Image size={18} />,
+  //   tooltip: "Image",
+  // },
   {
     icon: <Videotape size={18} />,
     tooltip: "Gif",

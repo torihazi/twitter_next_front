@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { fontSans, fontMono } from "@/config/fonts";
 import "@/styles/globals.css";
+import { RecoilRoot } from "recoil";
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -16,8 +17,10 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <NextUIProvider navigate={router.push}>
       <NextThemesProvider attribute="class" defaultTheme="dark">
-        <ToastContainer />
-        <Component {...pageProps} />
+        <RecoilRoot>
+          <ToastContainer />
+          <Component {...pageProps} />
+        </RecoilRoot>
       </NextThemesProvider>
     </NextUIProvider>
   );
