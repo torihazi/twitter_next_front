@@ -75,7 +75,7 @@ const AuthPage = () => {
               </h4>
               <AuthButton
                 className="bg-gradient-to-tr from-sky-400 to-lime-300 text-white"
-                onClick={() => onSigninOpen()}
+                onClick={onSigninOpen}
               >
                 ログイン
               </AuthButton>
