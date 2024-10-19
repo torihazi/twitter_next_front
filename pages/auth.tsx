@@ -60,7 +60,7 @@ const AuthPage = () => {
             <DividerWithText className="w-[300px]">または</DividerWithText>
             <AuthButton
               className="bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg"
-              onClick={() => onSignupOpen()}
+              onClick={onSignupOpen}
             >
               アカウントを作成
             </AuthButton>
