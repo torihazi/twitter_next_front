@@ -1,30 +1,21 @@
-import { LogoImage } from "@/components/logo-image";
 import { HomeTemplate } from "@/layouts/home-template";
-import { Button } from "@nextui-org/button";
-import { Card, CardBody, CardFooter, CardHeader } from "@nextui-org/card";
-import { Input, Textarea } from "@nextui-org/input";
 import { Tab, Tabs } from "@nextui-org/tabs";
-import { Tooltip } from "@nextui-org/tooltip";
-import { Search } from "lucide-react";
-import Image from "next/image";
 import { useState } from "react";
-import { inputIconItems } from "@/features/home/consts/input-icons";
 import { TweetForm } from "@/features/home/components/tweet-form";
 import { useForm } from "react-hook-form";
-import tweetsSchema, {
-  tweetsPartial,
-  tweetsPartialSchema,
-} from "@/prisma/generated/zod/modelSchema/tweetsSchema";
+import tweetsSchema from "@/prisma/generated/zod/modelSchema/tweetsSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { HomeSubSider } from "@/features/home/components/home-sub-sider";
+import { imagesSchema } from "@/features/images/schema/image-schema";
 
-const tweetsWithImagesSchema = tweetsSchema.merge(
-  z.object({
-    images: z.custom<FileList>(),
-  })
-);
-
-const tweetsPartialWithImagesSchema = tweetsWithImagesSchema.partial();
+export const tweetsPartialWithImagesSchema = tweetsSchema
+  .merge(imagesSchema)
+  .partial()
+  .refine((data) => data.content || (data.images && data.images.length > 0), {
+    message: "Either content or images is required",
+    path: ["content"],
+  });
 
 export type tweetsPartialWithImages = z.infer<
   typeof tweetsPartialWithImagesSchema
@@ -37,13 +28,14 @@ const TweetsIndex = () => {
     mode: "onChange",
     defaultValues: {
       content: "",
+      images: [],
     },
   });
 
   return (
     <HomeTemplate>
       <div className="flex h-screen">
-        <div className="flex-auto border-1 border-gray-800">
+        <div className="flex-auto border-1 border-gray-800 max-w-[600px]">
           <Tabs
             selectedKey={selected}
             variant="underlined"
@@ -64,43 +56,7 @@ const TweetsIndex = () => {
           </Tabs>
         </div>
         <div className="flex-none max-w-[400px] p-2 ">
-          <div className="p-2">
-            <Input
-              placeholder="Search"
-              startContent={<Search />}
-              variant="bordered"
-              radius="full"
-            />
-          </div>
-          <Card className="m-2">
-            <CardHeader>Subscribe to Premium</CardHeader>
-            <CardBody>
-              Subscribe to unlock new features and if eligible, receive a share
-              of ads revenue.
-            </CardBody>
-            <CardFooter>
-              <Button radius="full">Subscribe</Button>
-            </CardFooter>
-          </Card>
-          <Card className="m-2">
-            <CardHeader>Whats Happening</CardHeader>
-            <CardBody>
-              Subscribe to unlock new features and if eligible, receive a share
-              of ads revenue.
-            </CardBody>
-            <CardBody>
-              Subscribe to unlock new features and if eligible, receive a share
-              of ads revenue.
-            </CardBody>
-            <CardBody>
-              Subscribe to unlock new features and if eligible, receive a share
-              of ads revenue.
-            </CardBody>
-            <CardBody>
-              Subscribe to unlock new features and if eligible, receive a share
-              of ads revenue.
-            </CardBody>
-          </Card>
+          <HomeSubSider />
         </div>
       </div>
     </HomeTemplate>

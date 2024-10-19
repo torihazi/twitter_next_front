@@ -14,22 +14,20 @@ export const InputImagesButton = ({
   const [currentUrls, setImageUrls] = useRecoilState<string[]>(imageUrlsState);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const onChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const filelists = e.target.files;
     if (filelists) {
       const urls = Array.from(filelists).map((file) =>
         URL.createObjectURL(file)
       );
-      setImageUrls(urls);
+
+      form?.setValue("images", Array.from(filelists));
+
+      const result = await form?.trigger();
+      if (result) {
+        setImageUrls(urls);
+      }
     }
-
-    // const reader = new FileReader();
-
-    // reader.onload = () => {
-    //   setImageUrls((prev) => [...prev, reader.result as string]);
-    // };
-
-    // reader.readAsDataURL(files[0]);
   };
 
   return (
@@ -37,12 +35,11 @@ export const InputImagesButton = ({
       <IconButton onClick={() => inputRef.current?.click()}>{icon}</IconButton>
       <input
         {...form?.register("images", {
-          onChange: handleChange,
+          onChange,
         })}
         ref={inputRef}
-        accept="image/png image/jpeg"
+        accept="image/png, image/jpeg"
         className="hidden"
-        name="images"
         type="file"
         multiple
       />

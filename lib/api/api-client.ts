@@ -1,3 +1,4 @@
+import { ApiErrorResponse } from "@/types/api";
 import axios, {
   AxiosError,
   AxiosResponse,
@@ -29,12 +30,14 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 api.interceptors.response.use(
   // HTTPコードが2xxの時
   (response: AxiosResponse) => {
-    toast.info(response.data.message);
+    if (response.data.message) {
+      toast.info(response.data.message);
+    }
     console.log(response);
     return response;
   },
   // HTTPコードが2xx以外の時
-  (error: AxiosError) => {
+  (error: AxiosError<ApiErrorResponse>) => {
     toast.error(error.response?.data?.error);
     console.log(error);
     throw error;

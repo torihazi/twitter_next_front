@@ -1,25 +1,65 @@
 import { LogoImage } from "@/components/logo-image";
-import { Input, Textarea } from "@nextui-org/input";
+import { Textarea } from "@nextui-org/input";
 import { inputIconItems } from "../consts/input-icons";
-import { Tooltip } from "@nextui-org/tooltip";
 import { Button } from "@nextui-org/button";
 import { SubmitHandler, UseFormReturn, useWatch } from "react-hook-form";
-import { tweetsPartial } from "@/prisma/generated/zod/modelSchema/tweetsSchema";
 import { useCreateTweet } from "@/lib/api/tweet";
 import { IconButton } from "@/components/icon-button";
 import { InputImagesButton } from "@/components/input-file-button";
-import { Image } from "lucide-react";
-import { useRecoilValue } from "recoil";
+
+import { useRecoilState } from "recoil";
 import { imageUrlsState } from "../recoil/image-urls-atom";
 import { tweetsPartialWithImages } from "@/pages/tweets";
+import { useCreateImages } from "@/lib/api/image";
+import { Image } from "@nextui-org/image";
+import { ImageIcon, X } from "lucide-react";
 
-export const TweetForm = ({ form }: { form: UseFormReturn }) => {
-  const content = useWatch({ control: form.control, name: "content" });
-  const currentUrls = useRecoilValue<string[]>(imageUrlsState);
+export const TweetForm = ({
+  form,
+}: {
+  form: UseFormReturn<tweetsPartialWithImages>;
+}) => {
+  const content = useWatch({
+    control: form.control,
+    name: "content",
+  }) as string;
+  const [currentUrls, setUrls] = useRecoilState<string[]>(imageUrlsState);
   const { createTweet } = useCreateTweet({});
+  const { createImages } = useCreateImages({});
   const onSubmit: SubmitHandler<tweetsPartialWithImages> = async (values) => {
-    // const newTweet = createTweet(values);
-    console.log(values);
+    try {
+      if (values.images && values.images?.length > 0) {
+        const formdata = new FormData();
+        values.images.forEach((file) => formdata.append("images[]", file));
+
+        const response = await createImages(formdata);
+        const blobIds = response.data.data;
+
+        // 画像を含めた投稿
+        const submitData = { tweet: { ...values }, blob_ids: blobIds };
+        await createTweet(submitData);
+      } else {
+        await createTweet({ tweet: { ...values } });
+      }
+
+      // 送信後のクリーンアップ
+      form.reset();
+      setUrls([]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const removeImages = (currentUrl: string, index: number) => {
+    const files = form?.getValues("images");
+    if (files) {
+      form?.setValue(
+        "images",
+        files?.filter((_, num) => num !== index)
+      );
+      setUrls(currentUrls.filter((url) => url !== currentUrl));
+      form?.trigger();
+    }
   };
 
   return (
@@ -36,8 +76,6 @@ export const TweetForm = ({ form }: { form: UseFormReturn }) => {
             {...form.register("content")}
             placeholder="What is happening?"
             radius="none"
-            isInvalid={!form.formState.isValid}
-            errorMessage={form.formState.errors.content?.message as string}
             classNames={{
               inputWrapper: [
                 "bg-transparent",
@@ -49,17 +87,41 @@ export const TweetForm = ({ form }: { form: UseFormReturn }) => {
               input: "bg-transparent",
             }}
           />
+
+          {form.formState.errors.content && (
+            <span>{form.formState.errors.content.message}</span>
+          )}
+          {form.formState.errors.images && (
+            <span>{form.formState.errors.images.message}</span>
+          )}
+
           {/* 画像プレビュー挿入 */}
-          {currentUrls.length > 0 &&
-            currentUrls.map((url) => (
-              <div key={url}>
-                <img src={`${url}`} alt="" />
-              </div>
-            ))}
+          <div className="flex overflow-x-auto">
+            {currentUrls.length > 0 &&
+              currentUrls.map((url, index) => (
+                <div key={url} className="shrink-0 relative">
+                  <Image
+                    alt={`画像${index}枚目`}
+                    src={`${url}`}
+                    radius="lg"
+                    width={`${currentUrls.length === 1 ? 500 : 300}`}
+                  />
+                  <Button
+                    isIconOnly
+                    variant="solid"
+                    radius="full"
+                    className="absolute top-1 right-1 z-10"
+                    onClick={() => removeImages(url, index)}
+                  >
+                    <X />
+                  </Button>
+                </div>
+              ))}
+          </div>
 
           <div className="flex justify-between my-2">
             <div className="flex">
-              <InputImagesButton icon={<Image size={18} />} form={form} />
+              <InputImagesButton icon={<ImageIcon size={18} />} form={form} />
               {inputIconItems.map((item, index) => (
                 <IconButton key={index}>{item.icon}</IconButton>
               ))}

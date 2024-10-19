@@ -4,13 +4,17 @@ import {
 } from "@/prisma/generated/zod/modelSchema/tweetsSchema";
 import { api } from "./api-client";
 import { AxiosResponse } from "axios";
+import { tweetsPartialWithImages } from "@/pages/tweets";
+import { ApiSuccessResponse, DynamicPropertyWithBlobIds } from "@/types/api";
 
 //
 // index tweet
 //
 
-const indexTweet = (): Promise<AxiosResponse<any, any>> => {
-  return api.get("/v1/tweets");
+const indexTweet = (): Promise<
+  AxiosResponse<ApiSuccessResponse<tweets[]>, any>
+> => {
+  return api.get("/api/v1/tweets");
 };
 
 //
@@ -18,13 +22,9 @@ const indexTweet = (): Promise<AxiosResponse<any, any>> => {
 //
 
 const createTweetApi = async (
-  values: tweetsPartial
-): Promise<AxiosResponse<tweets>> => {
-  const data = {
-    tweet: { ...values },
-  };
-
-  return api.post("/api/v1/tweets", data);
+  values: DynamicPropertyWithBlobIds<tweetsPartial, "tweet">
+): Promise<AxiosResponse<ApiSuccessResponse<tweets>>> => {
+  return api.post("/api/v1/tweets", values);
 };
 
 export const useCreateTweet = ({
@@ -34,7 +34,9 @@ export const useCreateTweet = ({
   onSuccess?: () => void;
   onError?: () => void;
 }) => {
-  const createTweet = async (values: tweetsPartial) => {
+  const createTweet = async (
+    values: DynamicPropertyWithBlobIds<tweetsPartial, "tweet">
+  ): Promise<AxiosResponse<ApiSuccessResponse<tweets>>> => {
     try {
       const newTweet = await createTweetApi(values);
 
@@ -47,6 +49,8 @@ export const useCreateTweet = ({
       if (onError) {
         onError();
       }
+
+      throw error;
     }
   };
 
