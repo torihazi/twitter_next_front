@@ -27,13 +27,7 @@ const createTweetApi = async (
   return api.post("/api/v1/tweets", values);
 };
 
-export const useCreateTweet = ({
-  onSuccess,
-  onError,
-}: {
-  onSuccess?: () => void;
-  onError?: () => void;
-}) => {
+export const useCreateTweet = ({ onSuccess }: { onSuccess?: () => void }) => {
   const createTweet = async (
     values: DynamicPropertyWithBlobIds<tweetsPartial, "tweet">
   ): Promise<AxiosResponse<ApiSuccessResponse<tweets>>> => {
@@ -45,12 +39,8 @@ export const useCreateTweet = ({
       }
 
       return newTweet;
-    } catch (error) {
-      if (onError) {
-        onError();
-      }
-
-      throw error;
+    } catch (error: any) {
+      throw Error(error);
     }
   };
 

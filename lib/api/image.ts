@@ -13,13 +13,7 @@ export const createImagesApi = async (
   return api.post("/api/v1/images", values);
 };
 
-export const useCreateImages = ({
-  onSuccess,
-  onError,
-}: {
-  onSuccess?: () => void;
-  onError?: () => void;
-}) => {
+export const useCreateImages = ({ onSuccess }: { onSuccess?: () => void }) => {
   const createImages = async (
     values: FormData
   ): Promise<AxiosResponse<ApiSuccessResponse<ImageApi>>> => {
@@ -30,9 +24,6 @@ export const useCreateImages = ({
       }
       return response;
     } catch (error: any) {
-      if (onError) {
-        onError();
-      }
       throw Error(error);
     }
   };

@@ -1,7 +1,7 @@
 import { ChangeEvent, forwardRef, ReactNode, useRef } from "react";
 import { IconButton } from "./icon-button";
 import { UseFormReturn } from "react-hook-form";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { imageUrlsState } from "@/features/home/recoil/image-urls-atom";
 
 export const InputImagesButton = ({
@@ -11,7 +11,7 @@ export const InputImagesButton = ({
   icon: ReactNode;
   form?: UseFormReturn;
 }) => {
-  const [currentUrls, setImageUrls] = useRecoilState<string[]>(imageUrlsState);
+  const setImageUrls = useSetRecoilState<string[]>(imageUrlsState);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const onChange = async (e: ChangeEvent<HTMLInputElement>) => {
