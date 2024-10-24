@@ -24,8 +24,8 @@ export const useSignup = ({ onSuccess }: { onSuccess?: () => void }) => {
       }
 
       return response;
-    } catch (err) {
-      return err;
+    } catch (err: any) {
+      throw Error(err);
     }
   };
 
@@ -58,8 +58,8 @@ export const useSignin = ({ onSuccess }: { onSuccess?: () => void }) => {
       }
 
       return response.data?.data;
-    } catch (err) {
-      return err;
+    } catch (err: any) {
+      throw Error(err);
     }
   };
 
