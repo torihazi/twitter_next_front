@@ -1,7 +1,9 @@
-import TweetsSchema from "@/prisma/generated/zod/modelSchema/TweetsSchema";
+import TweetsSchema, {
+  TweetsRelations,
+} from "@/prisma/generated/zod/modelSchema/TweetsSchema";
 import { z } from "zod";
 import { ImagesSchema } from "../images/schema";
-import { Tweets } from "@prisma/client";
+import { Tweets, Users } from "@prisma/client";
 
 //
 // 画像添付可能なツイート用スキーマ
@@ -19,9 +21,16 @@ export type TweetsPartialWithImages = z.infer<
 >;
 
 //
-// 適切な説明が思いつかない。表示用ツイートの型？
+// 適切な説明が思いつかない。
 //
 
 export type TweetImages = Tweets & {
   imageUrls: string[];
+};
+
+//
+// 今後拡張予定？ index画面で表示するtweetの型
+//
+export type TweetsImagesWithRelations = TweetImages & {
+  user: Users;
 };

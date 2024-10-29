@@ -1,27 +1,40 @@
 import { api } from "@/lib/api/api-client";
 import { TweetsPartial } from "@/prisma/generated/zod/modelSchema/TweetsSchema";
-import { DynamicPropertyWithBlobIds } from "@/types";
+import { ApiSuccessResponse, DynamicPropertyWithBlobIds } from "@/types";
 import useSWR from "swr";
-import { TweetImages } from "../schema";
+import { TweetImages, TweetsImagesWithRelations } from "../schema";
 
 const KEY = "tweets";
+
+const convertQuery = (query: Record<string, number>) => {
+  return Object.entries(query).reduce((acc, [key, val]) => {
+    return acc + `${key}=${val}` + "&";
+  }, "?");
+};
 
 //
 // index tweet
 //
 
-const indexTweetsApi = async (): Promise<TweetImages[]> => {
-  const response = await api.get("/api/v1/tweets");
-  return response.data;
+const indexTweetsApi = async (
+  query: Record<string, number> = { limit: 10, offset: 0 }
+): Promise<ApiSuccessResponse<TweetsImagesWithRelations[]>> => {
+  const queryString = convertQuery(query);
+  return await api.get(`/api/v1/tweets${queryString}`);
 };
 
-export const useTweets = () => {
-  const key = [KEY];
-  const fetcher = indexTweetsApi;
-  const { data, mutate, isLoading } = useSWR<TweetImages[]>(key, fetcher);
+export const useTweets = (
+  query: Record<string, number> = { limit: 10, offset: 0 }
+) => {
+  const key = [KEY, query.limit, query.offset];
+  const fetcher = () => indexTweetsApi(query);
+  const { data, mutate, isLoading } = useSWR<
+    ApiSuccessResponse<TweetsImagesWithRelations[]>
+  >(key, fetcher);
 
   return {
-    tweets: data,
+    tweets: data?.data,
+    meta: data?.meta,
     mutate,
     isLoading,
   };

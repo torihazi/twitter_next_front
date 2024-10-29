@@ -79,10 +79,15 @@ api.interceptors.response.use(
     return {
       ...response,
       data: convertToCamelCase(response.data.data),
+      meta: response.data.meta,
     };
   },
   // HTTPコードが2xx以外の時
   (error: AxiosError<ApiErrorResponse>) => {
+    if (error.status === 401) {
+      window.location.href = "/auth";
+    }
+
     toast.error(error.response?.data?.error);
     throw error;
   }

@@ -6,6 +6,7 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
 
 export type ApiSuccessResponse<T> = {
   data: T;
+  meta?: number;
   message: string;
 };
 
