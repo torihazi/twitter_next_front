@@ -1,10 +1,7 @@
-import { api } from "./api-client";
-
-import { users } from "@/prisma/generated/zod/modelSchema/usersSchema";
-import { usersSignup } from "@/features/auth/components/signup-modal";
-import { usersSignin } from "@/features/auth/components/signin-modal";
 import { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
+import { api } from "@/lib/api/api-client";
+import { usersSignin, usersSignup } from "../schema";
 
 //
 // signup
@@ -38,7 +35,7 @@ export const useSignup = ({ onSuccess }: { onSuccess?: () => void }) => {
 
 export const signinFn = (data: usersSignin): Promise<AxiosResponse> => {
   const newData = {
-    api_v1_user: { ...data },
+    apiV1User: { ...data },
   };
 
   return api.post("/api/v1/users/sign_in", newData);
@@ -59,6 +56,7 @@ export const useSignin = ({ onSuccess }: { onSuccess?: () => void }) => {
 
       return response.data?.data;
     } catch (err: any) {
+      console.log(err);
       throw Error(err);
     }
   };

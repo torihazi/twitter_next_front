@@ -9,31 +9,19 @@ import { Button } from "@nextui-org/button";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { LogoImage } from "@/components/logo-image";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  usersPartial,
-  usersPartialSchema,
-} from "@/prisma/generated/zod/modelSchema/usersSchema";
 import { InputPasswordField } from "@/components/input-password-field";
 import { InputTextField } from "@/components/input-text-field";
 import { DatePicker } from "@nextui-org/date-picker";
 import { useState } from "react";
 import { DateValue, parseDate } from "@internationalized/date";
-import { z } from "zod";
-import { useSignup } from "@/lib/api/auth-user";
+import { useSignup } from "../hook/useAuth";
+import { usersSignup, UsersSignupSchema } from "../schema";
 
 type SignupModalTypes = {
   isOpen: boolean;
   onOpen: () => void;
   onOpenChange: () => void;
 };
-
-const usersSignupSchema = usersPartialSchema.merge(
-  z.object({
-    password: z.string().min(6, "at least 6 characters").optional(),
-  })
-);
-
-export type usersSignup = z.infer<typeof usersSignupSchema>;
 
 export const SignupModal = ({
   isOpen,
@@ -44,7 +32,7 @@ export const SignupModal = ({
   const { signup } = useSignup({});
   const form = useForm({
     mode: "onChange",
-    resolver: zodResolver(usersSignupSchema),
+    resolver: zodResolver(UsersSignupSchema),
   });
 
   const onSubmit: SubmitHandler<usersSignup> = (data) => {

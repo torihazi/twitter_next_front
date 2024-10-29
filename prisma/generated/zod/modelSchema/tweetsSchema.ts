@@ -1,95 +1,95 @@
 import { z } from 'zod';
-import type { usersWithRelations } from './usersSchema'
-import type { usersPartialWithRelations } from './usersSchema'
-import type { usersOptionalDefaultsWithRelations } from './usersSchema'
-import { usersWithRelationsSchema } from './usersSchema'
-import { usersPartialWithRelationsSchema } from './usersSchema'
-import { usersOptionalDefaultsWithRelationsSchema } from './usersSchema'
+import type { UsersWithRelations } from './UsersSchema'
+import type { UsersPartialWithRelations } from './UsersSchema'
+import type { UsersOptionalDefaultsWithRelations } from './UsersSchema'
+import { UsersWithRelationsSchema } from './UsersSchema'
+import { UsersPartialWithRelationsSchema } from './UsersSchema'
+import { UsersOptionalDefaultsWithRelationsSchema } from './UsersSchema'
 
 /////////////////////////////////////////
 // TWEETS SCHEMA
 /////////////////////////////////////////
 
-export const tweetsSchema = z.object({
+export const TweetsSchema = z.object({
   id: z.bigint(),
   content: z.string().max(150,{message: "Maximum 150 characters"}).nullable(),
-  user_id: z.bigint(),
-  created_at: z.coerce.date(),
-  updated_at: z.coerce.date(),
+  userId: z.bigint(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
 })
 
-export type tweets = z.infer<typeof tweetsSchema>
+export type Tweets = z.infer<typeof TweetsSchema>
 
 /////////////////////////////////////////
 // TWEETS PARTIAL SCHEMA
 /////////////////////////////////////////
 
-export const tweetsPartialSchema = tweetsSchema.partial()
+export const TweetsPartialSchema = TweetsSchema.partial()
 
-export type tweetsPartial = z.infer<typeof tweetsPartialSchema>
+export type TweetsPartial = z.infer<typeof TweetsPartialSchema>
 
 /////////////////////////////////////////
 // TWEETS OPTIONAL DEFAULTS SCHEMA
 /////////////////////////////////////////
 
-export const tweetsOptionalDefaultsSchema = tweetsSchema.merge(z.object({
+export const TweetsOptionalDefaultsSchema = TweetsSchema.merge(z.object({
   id: z.bigint().optional(),
 }))
 
-export type tweetsOptionalDefaults = z.infer<typeof tweetsOptionalDefaultsSchema>
+export type TweetsOptionalDefaults = z.infer<typeof TweetsOptionalDefaultsSchema>
 
 /////////////////////////////////////////
 // TWEETS RELATION SCHEMA
 /////////////////////////////////////////
 
-export type tweetsRelations = {
-  users: usersWithRelations;
+export type TweetsRelations = {
+  users: UsersWithRelations;
 };
 
-export type tweetsWithRelations = z.infer<typeof tweetsSchema> & tweetsRelations
+export type TweetsWithRelations = z.infer<typeof TweetsSchema> & TweetsRelations
 
-export const tweetsWithRelationsSchema: z.ZodType<tweetsWithRelations> = tweetsSchema.merge(z.object({
-  users: z.lazy(() => usersWithRelationsSchema),
+export const TweetsWithRelationsSchema: z.ZodType<TweetsWithRelations> = TweetsSchema.merge(z.object({
+  users: z.lazy(() => UsersWithRelationsSchema),
 }))
 
 /////////////////////////////////////////
 // TWEETS OPTIONAL DEFAULTS RELATION SCHEMA
 /////////////////////////////////////////
 
-export type tweetsOptionalDefaultsRelations = {
-  users: usersOptionalDefaultsWithRelations;
+export type TweetsOptionalDefaultsRelations = {
+  users: UsersOptionalDefaultsWithRelations;
 };
 
-export type tweetsOptionalDefaultsWithRelations = z.infer<typeof tweetsOptionalDefaultsSchema> & tweetsOptionalDefaultsRelations
+export type TweetsOptionalDefaultsWithRelations = z.infer<typeof TweetsOptionalDefaultsSchema> & TweetsOptionalDefaultsRelations
 
-export const tweetsOptionalDefaultsWithRelationsSchema: z.ZodType<tweetsOptionalDefaultsWithRelations> = tweetsOptionalDefaultsSchema.merge(z.object({
-  users: z.lazy(() => usersOptionalDefaultsWithRelationsSchema),
+export const TweetsOptionalDefaultsWithRelationsSchema: z.ZodType<TweetsOptionalDefaultsWithRelations> = TweetsOptionalDefaultsSchema.merge(z.object({
+  users: z.lazy(() => UsersOptionalDefaultsWithRelationsSchema),
 }))
 
 /////////////////////////////////////////
 // TWEETS PARTIAL RELATION SCHEMA
 /////////////////////////////////////////
 
-export type tweetsPartialRelations = {
-  users?: usersPartialWithRelations;
+export type TweetsPartialRelations = {
+  users?: UsersPartialWithRelations;
 };
 
-export type tweetsPartialWithRelations = z.infer<typeof tweetsPartialSchema> & tweetsPartialRelations
+export type TweetsPartialWithRelations = z.infer<typeof TweetsPartialSchema> & TweetsPartialRelations
 
-export const tweetsPartialWithRelationsSchema: z.ZodType<tweetsPartialWithRelations> = tweetsPartialSchema.merge(z.object({
-  users: z.lazy(() => usersPartialWithRelationsSchema),
+export const TweetsPartialWithRelationsSchema: z.ZodType<TweetsPartialWithRelations> = TweetsPartialSchema.merge(z.object({
+  users: z.lazy(() => UsersPartialWithRelationsSchema),
 })).partial()
 
-export type tweetsOptionalDefaultsWithPartialRelations = z.infer<typeof tweetsOptionalDefaultsSchema> & tweetsPartialRelations
+export type TweetsOptionalDefaultsWithPartialRelations = z.infer<typeof TweetsOptionalDefaultsSchema> & TweetsPartialRelations
 
-export const tweetsOptionalDefaultsWithPartialRelationsSchema: z.ZodType<tweetsOptionalDefaultsWithPartialRelations> = tweetsOptionalDefaultsSchema.merge(z.object({
-  users: z.lazy(() => usersPartialWithRelationsSchema),
+export const TweetsOptionalDefaultsWithPartialRelationsSchema: z.ZodType<TweetsOptionalDefaultsWithPartialRelations> = TweetsOptionalDefaultsSchema.merge(z.object({
+  users: z.lazy(() => UsersPartialWithRelationsSchema),
 }).partial())
 
-export type tweetsWithPartialRelations = z.infer<typeof tweetsSchema> & tweetsPartialRelations
+export type TweetsWithPartialRelations = z.infer<typeof TweetsSchema> & TweetsPartialRelations
 
-export const tweetsWithPartialRelationsSchema: z.ZodType<tweetsWithPartialRelations> = tweetsSchema.merge(z.object({
-  users: z.lazy(() => usersPartialWithRelationsSchema),
+export const TweetsWithPartialRelationsSchema: z.ZodType<TweetsWithPartialRelations> = TweetsSchema.merge(z.object({
+  users: z.lazy(() => UsersPartialWithRelationsSchema),
 }).partial())
 
-export default tweetsSchema;
+export default TweetsSchema;

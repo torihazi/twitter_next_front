@@ -1,112 +1,112 @@
 import { z } from 'zod';
-import type { tweetsWithRelations } from './tweetsSchema'
-import type { tweetsPartialWithRelations } from './tweetsSchema'
-import type { tweetsOptionalDefaultsWithRelations } from './tweetsSchema'
-import { tweetsWithRelationsSchema } from './tweetsSchema'
-import { tweetsPartialWithRelationsSchema } from './tweetsSchema'
-import { tweetsOptionalDefaultsWithRelationsSchema } from './tweetsSchema'
+import type { TweetsWithRelations } from './TweetsSchema'
+import type { TweetsPartialWithRelations } from './TweetsSchema'
+import type { TweetsOptionalDefaultsWithRelations } from './TweetsSchema'
+import { TweetsWithRelationsSchema } from './TweetsSchema'
+import { TweetsPartialWithRelationsSchema } from './TweetsSchema'
+import { TweetsOptionalDefaultsWithRelationsSchema } from './TweetsSchema'
 
 /////////////////////////////////////////
 // USERS SCHEMA
 /////////////////////////////////////////
 
-export const usersSchema = z.object({
+export const UsersSchema = z.object({
   id: z.bigint(),
   email: z.string().min(1,{message: "Required"}).email(),
-  encrypted_password: z.string(),
+  encryptedPassword: z.string(),
   name: z.string().min(1,{message: "Required"}),
   profile: z.string().nullable(),
   place: z.string().nullable(),
   web: z.string().nullable(),
   birth: z.string().nullable(),
-  reset_password_token: z.string().nullable(),
-  reset_password_sent_at: z.coerce.date().nullable(),
-  remember_created_at: z.coerce.date().nullable(),
-  confirmation_token: z.string().nullable(),
-  confirmed_at: z.coerce.date().nullable(),
-  confirmation_sent_at: z.coerce.date().nullable(),
-  unconfirmed_email: z.string().nullable(),
-  created_at: z.coerce.date(),
-  updated_at: z.coerce.date(),
+  resetPasswordToken: z.string().nullable(),
+  resetPasswordSentAt: z.coerce.date().nullable(),
+  rememberCreatedAt: z.coerce.date().nullable(),
+  confirmationToken: z.string().nullable(),
+  confirmedAt: z.coerce.date().nullable(),
+  confirmationSentAt: z.coerce.date().nullable(),
+  unconfirmedEmail: z.string().nullable(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
   jti: z.string(),
 })
 
-export type users = z.infer<typeof usersSchema>
+export type Users = z.infer<typeof UsersSchema>
 
 /////////////////////////////////////////
 // USERS PARTIAL SCHEMA
 /////////////////////////////////////////
 
-export const usersPartialSchema = usersSchema.partial()
+export const UsersPartialSchema = UsersSchema.partial()
 
-export type usersPartial = z.infer<typeof usersPartialSchema>
+export type UsersPartial = z.infer<typeof UsersPartialSchema>
 
 /////////////////////////////////////////
 // USERS OPTIONAL DEFAULTS SCHEMA
 /////////////////////////////////////////
 
-export const usersOptionalDefaultsSchema = usersSchema.merge(z.object({
+export const UsersOptionalDefaultsSchema = UsersSchema.merge(z.object({
   id: z.bigint().optional(),
   email: z.string().min(1,{message: "Required"}).email().optional(),
-  encrypted_password: z.string().optional(),
+  encryptedPassword: z.string().optional(),
   name: z.string().min(1,{message: "Required"}).optional(),
   jti: z.string().optional(),
 }))
 
-export type usersOptionalDefaults = z.infer<typeof usersOptionalDefaultsSchema>
+export type UsersOptionalDefaults = z.infer<typeof UsersOptionalDefaultsSchema>
 
 /////////////////////////////////////////
 // USERS RELATION SCHEMA
 /////////////////////////////////////////
 
-export type usersRelations = {
-  tweets: tweetsWithRelations[];
+export type UsersRelations = {
+  tweets: TweetsWithRelations[];
 };
 
-export type usersWithRelations = z.infer<typeof usersSchema> & usersRelations
+export type UsersWithRelations = z.infer<typeof UsersSchema> & UsersRelations
 
-export const usersWithRelationsSchema: z.ZodType<usersWithRelations> = usersSchema.merge(z.object({
-  tweets: z.lazy(() => tweetsWithRelationsSchema).array(),
+export const UsersWithRelationsSchema: z.ZodType<UsersWithRelations> = UsersSchema.merge(z.object({
+  tweets: z.lazy(() => TweetsWithRelationsSchema).array(),
 }))
 
 /////////////////////////////////////////
 // USERS OPTIONAL DEFAULTS RELATION SCHEMA
 /////////////////////////////////////////
 
-export type usersOptionalDefaultsRelations = {
-  tweets: tweetsOptionalDefaultsWithRelations[];
+export type UsersOptionalDefaultsRelations = {
+  tweets: TweetsOptionalDefaultsWithRelations[];
 };
 
-export type usersOptionalDefaultsWithRelations = z.infer<typeof usersOptionalDefaultsSchema> & usersOptionalDefaultsRelations
+export type UsersOptionalDefaultsWithRelations = z.infer<typeof UsersOptionalDefaultsSchema> & UsersOptionalDefaultsRelations
 
-export const usersOptionalDefaultsWithRelationsSchema: z.ZodType<usersOptionalDefaultsWithRelations> = usersOptionalDefaultsSchema.merge(z.object({
-  tweets: z.lazy(() => tweetsOptionalDefaultsWithRelationsSchema).array(),
+export const UsersOptionalDefaultsWithRelationsSchema: z.ZodType<UsersOptionalDefaultsWithRelations> = UsersOptionalDefaultsSchema.merge(z.object({
+  tweets: z.lazy(() => TweetsOptionalDefaultsWithRelationsSchema).array(),
 }))
 
 /////////////////////////////////////////
 // USERS PARTIAL RELATION SCHEMA
 /////////////////////////////////////////
 
-export type usersPartialRelations = {
-  tweets?: tweetsPartialWithRelations[];
+export type UsersPartialRelations = {
+  tweets?: TweetsPartialWithRelations[];
 };
 
-export type usersPartialWithRelations = z.infer<typeof usersPartialSchema> & usersPartialRelations
+export type UsersPartialWithRelations = z.infer<typeof UsersPartialSchema> & UsersPartialRelations
 
-export const usersPartialWithRelationsSchema: z.ZodType<usersPartialWithRelations> = usersPartialSchema.merge(z.object({
-  tweets: z.lazy(() => tweetsPartialWithRelationsSchema).array(),
+export const UsersPartialWithRelationsSchema: z.ZodType<UsersPartialWithRelations> = UsersPartialSchema.merge(z.object({
+  tweets: z.lazy(() => TweetsPartialWithRelationsSchema).array(),
 })).partial()
 
-export type usersOptionalDefaultsWithPartialRelations = z.infer<typeof usersOptionalDefaultsSchema> & usersPartialRelations
+export type UsersOptionalDefaultsWithPartialRelations = z.infer<typeof UsersOptionalDefaultsSchema> & UsersPartialRelations
 
-export const usersOptionalDefaultsWithPartialRelationsSchema: z.ZodType<usersOptionalDefaultsWithPartialRelations> = usersOptionalDefaultsSchema.merge(z.object({
-  tweets: z.lazy(() => tweetsPartialWithRelationsSchema).array(),
+export const UsersOptionalDefaultsWithPartialRelationsSchema: z.ZodType<UsersOptionalDefaultsWithPartialRelations> = UsersOptionalDefaultsSchema.merge(z.object({
+  tweets: z.lazy(() => TweetsPartialWithRelationsSchema).array(),
 }).partial())
 
-export type usersWithPartialRelations = z.infer<typeof usersSchema> & usersPartialRelations
+export type UsersWithPartialRelations = z.infer<typeof UsersSchema> & UsersPartialRelations
 
-export const usersWithPartialRelationsSchema: z.ZodType<usersWithPartialRelations> = usersSchema.merge(z.object({
-  tweets: z.lazy(() => tweetsPartialWithRelationsSchema).array(),
+export const UsersWithPartialRelationsSchema: z.ZodType<UsersWithPartialRelations> = UsersSchema.merge(z.object({
+  tweets: z.lazy(() => TweetsPartialWithRelationsSchema).array(),
 }).partial())
 
-export default usersSchema;
+export default UsersSchema;

@@ -1,37 +1,29 @@
 import { HomeTemplate } from "@/layouts/home-template";
 import { Tab, Tabs } from "@nextui-org/tabs";
 import { useState } from "react";
-import { TweetForm } from "@/features/home/components/tweet-form";
+import { TweetForm } from "@/features/tweets/components/tweet-form";
 import { useForm } from "react-hook-form";
-import tweetsSchema from "@/prisma/generated/zod/modelSchema/tweetsSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { HomeSubSider } from "@/features/home/components/home-sub-sider";
-import { imagesSchema } from "@/features/images/schema/image-schema";
+import { HomeSubSider } from "@/features/tweets/components/home-sub-sider";
+import {
+  TweetImages,
+  TweetsPartialWithImages,
+  TweetsPartialWithImagesSchema,
+} from "@/features/tweets/schema";
+import { useTweets } from "@/features/tweets/hooks/useTweet";
+import { TweetsIndex } from "@/features/tweets/components/tweets-index";
 
-export const tweetsPartialWithImagesSchema = tweetsSchema
-  .merge(imagesSchema)
-  .partial()
-  .refine((data) => data.content || (data.images && data.images.length > 0), {
-    message: "Either content or images is required",
-    path: ["content"],
-  });
-
-export type tweetsPartialWithImages = z.infer<
-  typeof tweetsPartialWithImagesSchema
->;
-
-const TweetsIndex = () => {
+const Index = () => {
   const [selected, setSelected] = useState<string>("for-you");
-  const form = useForm<tweetsPartialWithImages>({
-    resolver: zodResolver(tweetsPartialWithImagesSchema),
+  const { tweets, mutate, isLoading } = useTweets();
+  const form = useForm<TweetsPartialWithImages>({
+    resolver: zodResolver(TweetsPartialWithImagesSchema),
     mode: "onChange",
     defaultValues: {
       content: "",
       images: [],
     },
   });
-
   return (
     <HomeTemplate>
       <div className="flex h-screen">
@@ -48,10 +40,18 @@ const TweetsIndex = () => {
             onSelectionChange={setSelected}
           >
             <Tab key="for-you" title="For you">
-              <TweetForm form={form} />
+              <TweetForm form={form} mutate={mutate} />
+              <TweetsIndex
+                tweets={tweets as TweetImages[]}
+                isLoading={isLoading}
+              />
             </Tab>
             <Tab key="followings" title="Followings">
-              <TweetForm form={form} />
+              <TweetForm form={form} mutate={mutate} />
+              <TweetsIndex
+                tweets={tweets as TweetImages[]}
+                isLoading={isLoading}
+              />
             </Tab>
           </Tabs>
         </div>
@@ -63,4 +63,4 @@ const TweetsIndex = () => {
   );
 };
 
-export default TweetsIndex;
+export default Index;

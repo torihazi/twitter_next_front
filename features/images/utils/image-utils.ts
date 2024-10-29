@@ -1,4 +1,4 @@
-import { IMAGE_EXTENSION } from "../constants/image-consts";
+import { IMAGE_EXTENSION } from "../constants";
 
 export const calculateTotalSize = (files: File[]): number => {
   return files.reduce((acc, file) => acc + file.size, 0);

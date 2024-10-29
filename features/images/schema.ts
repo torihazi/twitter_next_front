@@ -3,9 +3,9 @@ import {
   bytesToMB,
   calculateTotalSize,
   validateImageExtension,
-} from "../utils/image-utils";
+} from "./utils/image-utils";
 
-export const imagesSchema = z.object({
+export const ImagesSchema = z.object({
   images: z
     .custom<File[]>()
     .refine((files) => files.length <= 4, {
