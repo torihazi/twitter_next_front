@@ -1,5 +1,5 @@
 import { LogoImage } from "@/components/logo-image";
-import { homeSiderItems } from "../consts/home-sider-items";
+import { homeSiderItems } from "../constants/home-sider-items";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AuthButton } from "@/components/auth-button";

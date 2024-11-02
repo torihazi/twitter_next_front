@@ -1,42 +1,47 @@
 import { LogoImage } from "@/components/logo-image";
 import { Textarea } from "@nextui-org/input";
-import { inputIconItems } from "../consts/input-icons";
+import { inputIconItems } from "../constants/input-icons";
 import { Button } from "@nextui-org/button";
 import { SubmitHandler, UseFormReturn, useWatch } from "react-hook-form";
-import { useCreateTweet } from "@/lib/api/tweet";
 import { IconButton } from "@/components/icon-button";
 import { InputImagesButton } from "@/components/input-file-button";
 
 import { useRecoilState } from "recoil";
-import { imageUrlsState } from "../recoil/image-urls-atom";
-import { tweetsPartialWithImages } from "@/pages/tweets";
-import { useCreateImages } from "@/lib/api/image";
+import { imageUrlsState } from "../../../lib/recoil/image-urls-atom";
 import { Image } from "@nextui-org/image";
 import { ImageIcon, X } from "lucide-react";
+import { useCreateTweet } from "../hooks/useTweet";
+import { useCreateImages } from "@/features/images/hooks/useImage";
+import { TweetsPartialWithImages } from "../schema";
+import { DynamicPropertyWithBlobIds } from "@/types";
+import { TweetsPartial } from "@/prisma/generated/zod/modelSchema/TweetsSchema";
 
 export const TweetForm = ({
   form,
+  mutate,
 }: {
-  form: UseFormReturn<tweetsPartialWithImages>;
+  form: UseFormReturn<TweetsPartialWithImages>;
+  mutate: () => void;
 }) => {
   const content = useWatch({
     control: form.control,
     name: "content",
   }) as string;
   const [currentUrls, setUrls] = useRecoilState<string[]>(imageUrlsState);
-  const { createTweet } = useCreateTweet({});
+  const { createTweet } = useCreateTweet({ onSuccess: mutate });
   const { createImages } = useCreateImages({});
-  const onSubmit: SubmitHandler<tweetsPartialWithImages> = async (values) => {
+  const onSubmit: SubmitHandler<TweetsPartialWithImages> = async (values) => {
     try {
       if (values.images && values.images?.length > 0) {
         const formdata = new FormData();
         values.images.forEach((file) => formdata.append("images[]", file));
-
-        const response = await createImages(formdata);
-        const blobIds = response.data.data;
+        const blobIds = await createImages(formdata);
 
         // 画像を含めた投稿
-        const submitData = { tweet: { ...values }, blob_ids: blobIds };
+        const submitData: DynamicPropertyWithBlobIds<TweetsPartial, "tweet"> = {
+          tweet: { ...values },
+          blobIds: blobIds,
+        };
         await createTweet(submitData);
       } else {
         await createTweet({ tweet: { ...values } });

@@ -7,37 +7,22 @@ import {
 } from "@nextui-org/modal";
 import { Button } from "@nextui-org/button";
 import { SubmitHandler, useForm } from "react-hook-form";
-
-import { z } from "zod";
-
 import { LogoImage } from "@/components/logo-image";
-
 import { zodResolver } from "@hookform/resolvers/zod";
-
-import { usersPartialSchema } from "@/prisma/generated/zod/modelSchema/usersSchema";
 import { InputPasswordField } from "@/components/input-password-field";
 import { InputTextField } from "@/components/input-text-field";
-
-import { useSignin, useSignup } from "@/lib/api/auth-user";
 import { useRouter } from "next/router";
 import { AuthButton } from "@/components/auth-button";
 import { Apple, Atom } from "lucide-react";
-import { Divider } from "@nextui-org/divider";
 import { DividerWithText } from "@/components/divider-with-text";
+import { useSignin } from "../hook/useAuth";
+import { usersSignin, UsersSigninSchema } from "../schema";
 
 type SigninModalTypes = {
   isOpen: boolean;
   onOpen: () => void;
   onOpenChange: () => void;
 };
-
-const usersSigninSchema = usersPartialSchema.merge(
-  z.object({
-    password: z.string().min(6, "at least 6 characters").optional(),
-  })
-);
-
-export type usersSignin = z.infer<typeof usersSigninSchema>;
 
 export const SigninModal = ({
   isOpen,
@@ -52,7 +37,7 @@ export const SigninModal = ({
   });
   const form = useForm({
     mode: "onChange",
-    resolver: zodResolver(usersSigninSchema),
+    resolver: zodResolver(UsersSigninSchema),
   });
 
   const onSubmit: SubmitHandler<usersSignin> = (data) => {

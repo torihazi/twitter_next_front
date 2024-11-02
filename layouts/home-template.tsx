@@ -1,9 +1,7 @@
-import { Link } from "@nextui-org/link";
 import Head from "next/head";
 import { ReactNode } from "react";
 
-import { footerLinks } from "@/config/footer";
-import { HomeSider } from "@/features/home/components/home-sider";
+import { HomeSider } from "@/features/tweets/components/home-sider";
 
 export const HomeTemplate = ({ children }: { children: ReactNode }) => {
   return (

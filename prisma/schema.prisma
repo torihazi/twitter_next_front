@@ -20,94 +20,107 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model ar_internal_metadata {
-  key        String   @id @db.VarChar
-  value      String?  @db.VarChar
-  created_at DateTime @db.Timestamp(6)
-  updated_at DateTime @db.Timestamp(6)
+model ArInternalMetadata {
+  key       String   @id @db.VarChar
+  value     String?  @db.VarChar
+  createdAt DateTime @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @map("updated_at") @db.Timestamp(6)
+
+  @@map("ar_internal_metadata")
 }
 
-model schema_migrations {
+model SchemaMigrations {
   version String @id @db.VarChar
+
+  @@map("schema_migrations")
 }
 
-model tasks {
+model Tasks {
   id          BigInt   @id @default(autoincrement())
   title       String   @db.VarChar
   description String
   status      Int
-  created_at  DateTime @db.Timestamp(6)
-  updated_at  DateTime @db.Timestamp(6)
+  createdAt   DateTime @map("created_at") @db.Timestamp(6)
+  updatedAt   DateTime @map("updated_at") @db.Timestamp(6)
+
+  @@map("tasks")
 }
 
-model users {
-  id                     BigInt    @id @default(autoincrement())
+model Users {
+  id                  BigInt    @id @default(autoincrement())
   /// @zod.string.min(1,{message: "Required"}).email()
-  email                  String    @unique(map: "index_users_on_email") @default("") @db.VarChar
-  encrypted_password     String    @default("") @db.VarChar
+  email               String    @unique(map: "index_users_on_email") @default("") @db.VarChar
+  encryptedPassword   String    @default("") @map("encrypted_password") @db.VarChar
   /// @zod.string.min(1,{message: "Required"})
-  name                   String    @default("") @db.VarChar(50)
-  profile                String?   @db.VarChar
-  place                  String?   @db.VarChar
-  web                    String?   @db.VarChar
-  birth                  String?   @db.VarChar
-  reset_password_token   String?   @unique(map: "index_users_on_reset_password_token") @db.VarChar
-  reset_password_sent_at DateTime? @db.Timestamp(6)
-  remember_created_at    DateTime? @db.Timestamp(6)
-  confirmation_token     String?   @unique(map: "index_users_on_confirmation_token") @db.VarChar
-  confirmed_at           DateTime? @db.Timestamp(6)
-  confirmation_sent_at   DateTime? @db.Timestamp(6)
-  unconfirmed_email      String?   @db.VarChar
-  created_at             DateTime  @db.Timestamp(6)
-  updated_at             DateTime  @db.Timestamp(6)
-  jti                    String    @unique(map: "index_users_on_jti") @default("") @db.VarChar
-  tweets                 tweets[]
+  name                String    @default("") @db.VarChar(50)
+  profile             String?   @db.VarChar
+  place               String?   @db.VarChar
+  web                 String?   @db.VarChar
+  birth               String?   @db.VarChar
+  resetPasswordToken  String?   @unique(map: "index_users_on_reset_password_token") @map("reset_password_token") @db.VarChar
+  resetPasswordSentAt DateTime? @map("reset_password_sent_at") @db.Timestamp(6)
+  rememberCreatedAt   DateTime? @map("remember_created_at") @db.Timestamp(6)
+  confirmationToken   String?   @unique(map: "index_users_on_confirmation_token") @map("confirmation_token") @db.VarChar
+  confirmedAt         DateTime? @map("confirmed_at") @db.Timestamp(6)
+  confirmationSentAt  DateTime? @map("confirmation_sent_at") @db.Timestamp(6)
+  unconfirmedEmail    String?   @map("unconfirmed_email") @db.VarChar
+  createdAt           DateTime  @map("created_at") @db.Timestamp(6)
+  updatedAt           DateTime  @map("updated_at") @db.Timestamp(6)
+  jti                 String    @unique(map: "index_users_on_jti") @default("") @db.VarChar
+  tweets              Tweets[]
+
+  @@map("users")
 }
 
-model tweets {
-  id         BigInt   @id @default(autoincrement())
+model Tweets {
+  id        BigInt   @id @default(autoincrement())
   /// @zod.string.max(150,{message: "Maximum 150 characters"})
-  content    String?  @db.VarChar(150)
-  user_id    BigInt
-  created_at DateTime @db.Timestamp(6)
-  updated_at DateTime @db.Timestamp(6)
-  users      users    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_003928b7f5")
+  content   String?  @db.VarChar(150)
+  userId    BigInt   @map("user_id")
+  createdAt DateTime @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @map("updated_at") @db.Timestamp(6)
+  users     Users    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_003928b7f5")
 
-  @@index([user_id], map: "index_tweets_on_user_id")
+  @@index([userId], map: "index_tweets_on_user_id")
+  @@map("tweets")
 }
 
-model active_storage_attachments {
-  id                   BigInt               @id @default(autoincrement())
-  name                 String               @db.VarChar
-  record_type          String               @db.VarChar
-  record_id            BigInt
-  blob_id              BigInt
-  created_at           DateTime             @db.Timestamp(6)
-  active_storage_blobs active_storage_blobs @relation(fields: [blob_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_c3b3935057")
+model ActiveStorageAttachments {
+  id                 BigInt             @id @default(autoincrement())
+  name               String             @db.VarChar
+  recordType         String             @map("record_type") @db.VarChar
+  recordId           BigInt             @map("record_id")
+  blobId             BigInt             @map("blob_id")
+  createdAt          DateTime           @map("created_at") @db.Timestamp(6)
+  activeStorageBlobs ActiveStorageBlobs @relation(fields: [blobId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_c3b3935057")
 
-  @@unique([record_type, record_id, name, blob_id], map: "index_active_storage_attachments_uniqueness")
-  @@index([blob_id], map: "index_active_storage_attachments_on_blob_id")
+  @@unique([recordType, recordId, name, blobId], map: "index_active_storage_attachments_uniqueness")
+  @@index([blobId], map: "index_active_storage_attachments_on_blob_id")
+  @@map("active_storage_attachments")
 }
 
-model active_storage_blobs {
-  id                             BigInt                           @id @default(autoincrement())
-  key                            String                           @unique(map: "index_active_storage_blobs_on_key") @db.VarChar
-  filename                       String                           @db.VarChar
-  content_type                   String?                          @db.VarChar
-  metadata                       String?
-  service_name                   String                           @db.VarChar
-  byte_size                      BigInt
-  checksum                       String?                          @db.VarChar
-  created_at                     DateTime                         @db.Timestamp(6)
-  active_storage_attachments     active_storage_attachments[]
-  active_storage_variant_records active_storage_variant_records[]
+model ActiveStorageBlobs {
+  id                          BigInt                        @id @default(autoincrement())
+  key                         String                        @unique(map: "index_active_storage_blobs_on_key") @db.VarChar
+  filename                    String                        @db.VarChar
+  contentType                 String?                       @map("content_type") @db.VarChar
+  metadata                    String?
+  serviceName                 String                        @map("service_name") @db.VarChar
+  byteSize                    BigInt                        @map("byte_size")
+  checksum                    String?                       @db.VarChar
+  createdAt                   DateTime                      @map("created_at") @db.Timestamp(6)
+  activeStorageAttachments    ActiveStorageAttachments[]
+  activeStorageVariantRecords ActiveStorageVariantRecords[]
+
+  @@map("active_storage_blobs")
 }
 
-model active_storage_variant_records {
-  id                   BigInt               @id @default(autoincrement())
-  blob_id              BigInt
-  variation_digest     String               @db.VarChar
-  active_storage_blobs active_storage_blobs @relation(fields: [blob_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_993965df05")
+model ActiveStorageVariantRecords {
+  id                 BigInt             @id @default(autoincrement())
+  blobId             BigInt             @map("blob_id")
+  variationDigest    String             @map("variation_digest") @db.VarChar
+  activeStorageBlobs ActiveStorageBlobs @relation(fields: [blobId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_993965df05")
 
-  @@unique([blob_id, variation_digest], map: "index_active_storage_variant_records_uniqueness")
+  @@unique([blobId, variationDigest], map: "index_active_storage_variant_records_uniqueness")
+  @@map("active_storage_variant_records")
 }

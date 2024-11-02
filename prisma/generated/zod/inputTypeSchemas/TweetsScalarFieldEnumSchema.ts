@@ -1,5 +1,5 @@
 import { z } from 'zod';
 
-export const TweetsScalarFieldEnumSchema = z.enum(['id','content','user_id','created_at','updated_at']);
+export const TweetsScalarFieldEnumSchema = z.enum(['id','content','userId','createdAt','updatedAt']);
 
 export default TweetsScalarFieldEnumSchema;

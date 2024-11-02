@@ -1,45 +1,94 @@
-import { ApiErrorResponse } from "@/types/api";
+import { ApiErrorResponse, ApiSuccessResponse } from "@/types";
 import axios, {
   AxiosError,
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from "axios";
+import { camelCase, snakeCase } from "change-case";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
+
+const METHOD_WITH_PAYLOAD = ["post", "put"];
+
+const convertToSnakeCase = (data: any): any => {
+  if (Array.isArray(data)) {
+    return data.map(convertToSnakeCase);
+  } else if (data !== null && typeof data === "object") {
+    return Object.entries(data).reduce(
+      (result, [key, value]) => ({
+        ...result,
+        [snakeCase(key)]: value,
+      }),
+      {}
+    );
+  } else {
+    return data;
+  }
+};
+
+const convertToCamelCase = (data: any): any => {
+  if (Array.isArray(data)) {
+    return data.map(convertToCamelCase);
+  } else if (data !== null && typeof data === "object") {
+    return Object.entries(data).reduce(
+      (result, [key, value]) => ({
+        ...result,
+        [camelCase(key)]: value,
+      }),
+      {}
+    );
+  } else {
+    return data;
+  }
+};
 
 export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_DEVELOPMENT_URL,
 });
 
-// リクエストを送る前の処理
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  // サーバ側にブラウザが受け取れるデータ形式を設定
   config.headers.set("Accept", "application/json");
 
-  // Authorizationの項目に値が入っていなかった場合、設定
   if (
     !config.headers.has("Authorization") &&
     config.url !== "/api/v1/users/sign_in"
   ) {
     config.headers.set("Authorization", Cookies.get("token"));
   }
+
+  // リクエストデータの変換（FormData以外）
+  const hasRequestData = !!config.data;
+  const isNotFormData = !(config.data instanceof FormData);
+  const isValidMethod =
+    config.method && METHOD_WITH_PAYLOAD.includes(config.method.toLowerCase());
+
+  if (hasRequestData && isNotFormData && isValidMethod) {
+    config.data = convertToSnakeCase(config.data);
+  }
+
   return config;
 });
 
-// レスポンスを受け取った後の処理
 api.interceptors.response.use(
   // HTTPコードが2xxの時
-  (response: AxiosResponse) => {
+  (response: AxiosResponse<ApiSuccessResponse<any>>) => {
     if (response.data.message) {
       toast.info(response.data.message);
     }
-    console.log(response);
-    return response;
+
+    return {
+      ...response,
+      data: convertToCamelCase(response.data.data),
+      meta: response.data.meta,
+    };
   },
   // HTTPコードが2xx以外の時
   (error: AxiosError<ApiErrorResponse>) => {
+    if (error.status === 401) {
+      window.location.href = "/auth";
+    }
+
     toast.error(error.response?.data?.error);
-    console.log(error);
     throw error;
   }
 );

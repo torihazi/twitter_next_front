@@ -2,7 +2,7 @@ import { ChangeEvent, forwardRef, ReactNode, useRef } from "react";
 import { IconButton } from "./icon-button";
 import { UseFormReturn } from "react-hook-form";
 import { useSetRecoilState } from "recoil";
-import { imageUrlsState } from "@/features/home/recoil/image-urls-atom";
+import { imageUrlsState } from "@/lib/recoil/image-urls-atom";
 
 export const InputImagesButton = ({
   icon,

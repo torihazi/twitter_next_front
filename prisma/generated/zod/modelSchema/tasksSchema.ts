@@ -4,33 +4,33 @@ import { z } from 'zod';
 // TASKS SCHEMA
 /////////////////////////////////////////
 
-export const tasksSchema = z.object({
+export const TasksSchema = z.object({
   id: z.bigint(),
   title: z.string(),
   description: z.string(),
   status: z.number().int(),
-  created_at: z.coerce.date(),
-  updated_at: z.coerce.date(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
 })
 
-export type tasks = z.infer<typeof tasksSchema>
+export type Tasks = z.infer<typeof TasksSchema>
 
 /////////////////////////////////////////
 // TASKS PARTIAL SCHEMA
 /////////////////////////////////////////
 
-export const tasksPartialSchema = tasksSchema.partial()
+export const TasksPartialSchema = TasksSchema.partial()
 
-export type tasksPartial = z.infer<typeof tasksPartialSchema>
+export type TasksPartial = z.infer<typeof TasksPartialSchema>
 
 /////////////////////////////////////////
 // TASKS OPTIONAL DEFAULTS SCHEMA
 /////////////////////////////////////////
 
-export const tasksOptionalDefaultsSchema = tasksSchema.merge(z.object({
+export const TasksOptionalDefaultsSchema = TasksSchema.merge(z.object({
   id: z.bigint().optional(),
 }))
 
-export type tasksOptionalDefaults = z.infer<typeof tasksOptionalDefaultsSchema>
+export type TasksOptionalDefaults = z.infer<typeof TasksOptionalDefaultsSchema>
 
-export default tasksSchema;
+export default TasksSchema;
