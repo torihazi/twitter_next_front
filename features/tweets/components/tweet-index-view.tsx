@@ -4,12 +4,23 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Image } from "@nextui-org/image";
 import { getGridColumns } from "../utilty_func";
+import { useRouter } from "next/router";
 
 dayjs.extend(relativeTime);
 
-export const TweetView = ({ tweet }: { tweet: TweetsImagesWithRelations }) => {
+export const TweetIndexView = ({
+  tweet,
+}: {
+  tweet: TweetsImagesWithRelations;
+}) => {
+  const router = useRouter();
   return (
-    <div className="flex p-2 border-1 border-gray-800">
+    <div
+      className="flex p-2 border-1 border-gray-800 "
+      onClick={() => router.push(`/tweets/${tweet.id}`)}
+      onKeyDown={(e) => e.key === "Enter" && router.push(`/tweets/${tweet.id}`)}
+      role="button"
+    >
       <div className="flex-shrink-0 mr-4">
         <LogoImage width={40} height={40} className="rounded-full" />
       </div>
@@ -22,7 +33,9 @@ export const TweetView = ({ tweet }: { tweet: TweetsImagesWithRelations }) => {
           </time>
         </div>
 
-        <p className="mt-2 text-gray-900">{tweet.content}</p>
+        <p className="mt-2 text-gray-900 whitespace-pre-wrap">
+          {tweet.content}
+        </p>
 
         {tweet.imageUrls?.length > 0 && (
           <div className="mt-3 grid gap-2 auto-rows-auto">

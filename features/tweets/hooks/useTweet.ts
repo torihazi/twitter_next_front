@@ -2,7 +2,11 @@ import { api } from "@/lib/api/api-client";
 import { TweetsPartial } from "@/prisma/generated/zod/modelSchema/TweetsSchema";
 import { ApiSuccessResponse, DynamicPropertyWithBlobIds } from "@/types";
 import useSWR from "swr";
-import { TweetImages, TweetsImagesWithRelations } from "../schema";
+import {
+  ShowTweetResponse,
+  TweetImages,
+  TweetsImagesWithRelations,
+} from "../schema";
 
 const KEY = "tweets";
 
@@ -35,6 +39,29 @@ export const useTweets = (
   return {
     tweets: data?.data,
     meta: data?.meta,
+    mutate,
+    isLoading,
+  };
+};
+
+//
+// show tweet
+//
+const showTweetsApi = async (
+  id: string
+): Promise<ApiSuccessResponse<ShowTweetResponse>> => {
+  return await api.get(`/api/v1/tweets/${id}`);
+};
+
+export const useTweet = (id: string) => {
+  const key = [KEY, id];
+  const fetcher = () => showTweetsApi(id);
+  const { data, mutate, isLoading } = useSWR<
+    ApiSuccessResponse<ShowTweetResponse>
+  >(id ? key : null, fetcher);
+
+  return {
+    tweet: data?.data?.tweet,
     mutate,
     isLoading,
   };

@@ -1,6 +1,6 @@
 import { HomeTemplate } from "@/layouts/home-template";
 import { Tab, Tabs } from "@nextui-org/tabs";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TweetForm } from "@/features/tweets/components/tweet-form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,6 +17,7 @@ import { Pagination } from "@/components/pagination";
 const TWEETS_PER_PAGE = 10;
 
 const Index = () => {
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [selected, setSelected] = useState<string>("for-you");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const { tweets, meta, mutate, isLoading } = useTweets({
@@ -31,6 +32,7 @@ const Index = () => {
       images: [],
     },
   });
+
   return (
     <HomeTemplate>
       <div className="flex h-screen">
