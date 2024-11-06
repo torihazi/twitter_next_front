@@ -17,7 +17,7 @@ const convertToSnakeCase = (data: any): any => {
     return Object.entries(data).reduce(
       (result, [key, value]) => ({
         ...result,
-        [snakeCase(key)]: value,
+        [snakeCase(key)]: convertToSnakeCase(value),
       }),
       {}
     );
@@ -33,7 +33,7 @@ const convertToCamelCase = (data: any): any => {
     return Object.entries(data).reduce(
       (result, [key, value]) => ({
         ...result,
-        [camelCase(key)]: value,
+        [camelCase(key)]: convertToCamelCase(value),
       }),
       {}
     );
@@ -75,7 +75,6 @@ api.interceptors.response.use(
     if (response.data.message) {
       toast.info(response.data.message);
     }
-
     return {
       ...response,
       data: convertToCamelCase(response.data.data),

@@ -32,7 +32,12 @@ export const InputImagesButton = ({
 
   return (
     <>
-      <IconButton onClick={() => inputRef.current?.click()}>{icon}</IconButton>
+      <IconButton
+        className="text-[#1C9BEF]"
+        onClick={() => inputRef.current?.click()}
+      >
+        {icon}
+      </IconButton>
       <input
         {...form?.register("images", {
           onChange,

@@ -1,6 +1,6 @@
 import { TweetsImagesWithRelations } from "../schema";
 import { Spinner } from "@nextui-org/spinner";
-import { TweetView } from "./tweet-view";
+import { TweetIndexView } from "./tweet-index-view";
 
 interface TweetsIndexProps {
   tweets: TweetsImagesWithRelations[];
@@ -27,7 +27,10 @@ export const TweetsIndex = ({ tweets, isLoading }: TweetsIndexProps) => {
   return (
     <div className="">
       {tweets.map((tweet) => (
-        <TweetView key={tweet.id ?? tweet.createdAt.toString()} tweet={tweet} />
+        <TweetIndexView
+          key={tweet.id ?? tweet.createdAt.toString()}
+          tweet={tweet}
+        />
       ))}
     </div>
   );

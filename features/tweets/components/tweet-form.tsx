@@ -128,7 +128,9 @@ export const TweetForm = ({
             <div className="flex">
               <InputImagesButton icon={<ImageIcon size={18} />} form={form} />
               {inputIconItems.map((item, index) => (
-                <IconButton key={index}>{item.icon}</IconButton>
+                <IconButton key={index} className="text-[#1C9BEF]">
+                  {item.icon}
+                </IconButton>
               ))}
             </div>
 

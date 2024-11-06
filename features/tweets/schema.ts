@@ -34,3 +34,10 @@ export type TweetImages = Tweets & {
 export type TweetsImagesWithRelations = TweetImages & {
   user: Users;
 };
+
+//
+// showのresponse TODO:上手くまとめられないか
+//
+export type ShowTweetResponse = {
+  tweet: TweetsImagesWithRelations;
+};
